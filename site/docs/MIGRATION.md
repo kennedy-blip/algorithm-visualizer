@@ -92,7 +92,7 @@ guessed. Before creating anything:
    the same repo on branch `arena/69228659-algorithm-visualizer`:
    * Runtime: Static Site
    * Root directory: `.`
-   * Build command: `pip install -r site/requirements.txt && python3 site/build.py`
+   * Build command: `python3 -m venv .venv && .venv/bin/pip install -r site/requirements.txt && .venv/bin/python site/build.py`
    * Publish directory: `site/dist`
    * Env: `PYTHON_VERSION=3.11.2`
    (`site/render-staging.yaml` holds the same values in blueprint form. It is

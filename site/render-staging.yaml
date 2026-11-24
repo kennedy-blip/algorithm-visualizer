@@ -11,7 +11,7 @@ services:
     name: algorithm-visualizer-staging
     runtime: static
     rootDir: .
-    buildCommand: pip install -r site/requirements.txt && python3 site/build.py
+    buildCommand: python3 -m venv .venv && .venv/bin/pip install -r site/requirements.txt && .venv/bin/python site/build.py
     staticPublishPath: site/dist
     envVars:
       - key: PYTHON_VERSION

@@ -67,7 +67,10 @@ diff two builds.
 
 Render **static site**:
 
-* Build command: `pip install -r site/requirements.txt && python3 site/build.py`
+* Build command: `python3 -m venv .venv && .venv/bin/pip install -r site/requirements.txt && .venv/bin/python site/build.py`
+  (the local venv keeps the build independent of the system Python's
+  PEP 668 `externally-managed-environment` policy — plain `pip install` fails
+  on Debian-based images without `--break-system-packages`)
 * Publish directory: `site/dist`
 * Root directory: `.`
 * `PYTHON_VERSION=3.11.2`
