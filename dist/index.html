@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Visualize sorting algorithms step by step. Compare, pause, step through and replay Bubble, Quick and Merge sort." />
+    <meta name="theme-color" content="#0b1120" />
+    <title>Algorithm Visualization - Sorting Algorithms</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#visualization">Skip to visualization</a>
+<div class="page">
+  <div class="shell">
+    <header class="site-header">
+      <div class="site-header__text">
+        <h1 class="site-title">Algorithm Visualization</h1>
+        <p class="site-tagline">Visualize sorting algorithms step by step</p>
+      </div>
+      <div class="stats" aria-live="off">
+        <span class="stats__icon"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+</svg></span>
+        <span class="stats__item">Comparisons: <strong id="stat-comparisons">0</strong></span>
+        <span class="stats__item">Swaps: <strong id="stat-swaps">0</strong></span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <div class="column column--side">
+        <section class="card" aria-labelledby="selection-heading">
+          <h2 class="card__title" id="selection-heading">
+            <svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.2.46.65.79 1.16.83H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+</svg> Algorithm Selection
+          </h2>
+          <div class="algo-grid" role="group" aria-label="Choose a sorting algorithm">
+            <button
+              type="button"
+              class="algo-button is-active"
+              data-algorithm="bubble"
+              aria-pressed="true"
+            >
+              <svg class="icon icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+</svg>
+              <span class="algo-button__label">bubble Sort</span>
+            </button>
+            <button
+              type="button"
+              class="algo-button"
+              data-algorithm="quick"
+              aria-pressed="false"
+            >
+              <svg class="icon icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+</svg>
+              <span class="algo-button__label">quick Sort</span>
+            </button>
+            <button
+              type="button"
+              class="algo-button"
+              data-algorithm="merge"
+              aria-pressed="false"
+            >
+              <svg class="icon icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/>
+</svg>
+              <span class="algo-button__label">merge Sort</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="card algo-info" data-algo-panel="bubble"
+                 aria-labelledby="info-bubble">
+          <div class="algo-info__head">
+            <span class="badge" style="--accent: #f97316"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+</svg></span>
+            <div>
+              <h3 class="algo-info__name" id="info-bubble">Bubble Sort</h3>
+              <p class="algo-info__complexity">Time Complexity: O(n²)</p>
+            </div>
+          </div>
+          <p class="algo-info__description">Repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.</p>
+          <p class="algo-info__hint">One playback step = one adjacent comparison.</p>
+        </section>
+        <section class="card algo-info" data-algo-panel="quick"
+hidden                 aria-labelledby="info-quick">
+          <div class="algo-info__head">
+            <span class="badge" style="--accent: #a855f7"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+</svg></span>
+            <div>
+              <h3 class="algo-info__name" id="info-quick">Quick Sort</h3>
+              <p class="algo-info__complexity">Time Complexity: O(n log n) average</p>
+            </div>
+          </div>
+          <p class="algo-info__description">Divide and conquer algorithm that picks an element as pivot and partitions the array around the pivot.</p>
+          <p class="algo-info__hint">One playback step = one partition comparison or pivot placement.</p>
+        </section>
+        <section class="card algo-info" data-algo-panel="merge"
+hidden                 aria-labelledby="info-merge">
+          <div class="algo-info__head">
+            <span class="badge" style="--accent: #22c55e"><svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/>
+</svg></span>
+            <div>
+              <h3 class="algo-info__name" id="info-merge">Merge Sort</h3>
+              <p class="algo-info__complexity">Time Complexity: O(n log n)</p>
+            </div>
+          </div>
+          <p class="algo-info__description">Divide and conquer algorithm that divides the array into halves, sorts them, and merges them back.</p>
+          <p class="algo-info__hint">One playback step = one merge of a pair of runs.</p>
+        </section>
+
+        <section class="card" aria-labelledby="controls-heading">
+          <h2 class="card__title" id="controls-heading">Array Controls</h2>
+          <div class="control">
+            <label class="control__label" for="array-size">
+              Array Size: <span id="array-size-value">20</span>
+            </label>
+            <input
+              class="range"
+              type="range"
+              id="array-size"
+              min="10"
+              max="40"
+              step="1"
+              value="20"
+            />
+            <div class="control__scale">
+              <span>10</span>
+              <span>25</span>
+              <span>40</span>
+            </div>
+          </div>
+
+          <div class="control">
+            <label class="control__label" for="speed">
+              Speed: <span id="speed-value">500</span>ms
+            </label>
+            <input
+              class="range"
+              type="range"
+              id="speed"
+              min="100"
+              max="900"
+              step="100"
+              value="500"
+            />
+            <div class="control__scale">
+              <span>Slow</span>
+              <span>Medium</span>
+              <span>Fast</span>
+            </div>
+          </div>
+
+          <button type="button" class="button button--ghost button--wide" id="reset-array">
+            <svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+</svg> Generate New Array
+          </button>
+        </section>
+      </div>
+
+      <div class="column column--main">
+        <section class="card" id="visualization" aria-labelledby="visualization-heading">
+          <div class="card__header">
+            <h2 class="card__title" id="visualization-heading">Visualization</h2>
+            <ul class="legend">
+              <li class="legend__item">
+                <span class="legend__swatch" style="--swatch: #3b82f6"></span>
+                <span>Normal</span>
+              </li>
+              <li class="legend__item">
+                <span class="legend__swatch" style="--swatch: #ef4444"></span>
+                <span>Comparing</span>
+              </li>
+              <li class="legend__item">
+                <span class="legend__swatch" style="--swatch: #22c55e"></span>
+                <span>Sorted</span>
+              </li>
+              <li class="legend__item">
+                <span class="legend__swatch" style="--swatch: #eab308"></span>
+                <span>Pivot</span>
+              </li>
+              <li class="legend__item">
+                <span class="legend__swatch" style="--swatch: #a855f7"></span>
+                <span>Merging</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="chart" id="chart" role="img" aria-label="Array being sorted">
+            <noscript>
+              <p class="noscript">This visualization needs JavaScript. All algorithm descriptions on this page work without it.</p>
+            </noscript>
+          </div>
+
+          <div class="playback">
+            <div class="playback__buttons">
+              <button type="button" class="button button--icon" id="step-back" aria-label="Previous step">
+                <svg class="icon icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <path d="m15 18-6-6 6-6"/>
+</svg>
+              </button>
+              <button type="button" class="button button--primary button--icon button--icon-lg" id="toggle-play" aria-label="Play">
+                <svg class="icon icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <polygon points="6 3 20 12 6 21 6 3"/>
+</svg>
+              </button>
+              <button type="button" class="button button--icon" id="step-forward" aria-label="Next step">
+                <svg class="icon icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <path d="m9 18 6-6-6-6"/>
+</svg>
+              </button>
+              <button type="button" class="button button--icon" id="restart" aria-label="Go to first step">
+                <svg class="icon icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <polygon points="19 20 9 12 19 4 19 20"/><line x1="5" x2="5" y1="19" y2="5"/>
+</svg>
+              </button>
+              <button type="button" class="button button--icon" id="skip-to-end" aria-label="Skip to final step">
+                <svg class="icon icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  <polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/>
+</svg>
+              </button>
+            </div>
+
+            <div class="progress">
+              <div class="progress__meta">
+                <span>Step: <strong id="step-current">0</strong></span>
+                <span>Total Steps: <strong id="step-total">0</strong></span>
+              </div>
+              <div class="progress__track" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                   aria-valuenow="0" aria-label="Sorting progress" id="progress-track">
+                <div class="progress__bar" id="progress-bar"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="explanation-heading">
+          <h2 class="card__title" id="explanation-heading">Step-by-Step Explanation</h2>
+          <div class="explanation" aria-live="polite" id="explanation-live">
+            <p class="explanation__step">
+              <span class="explanation__label" id="explanation-label"
+                    style="--step-color: #f97316">Step 0:</span>
+              <span id="explanation-text">Initial array generated. Ready to start sorting.</span>
+            </p>
+          </div>
+          <div class="explanation__notes">
+            <div data-algo-panel="bubble" >
+              <p class="explanation__paragraph">Bubble sort works by repeatedly swapping adjacent elements if they are in the wrong order. Each pass through the list places the next largest element in its correct position.</p>
+              <ul class="explanation__list">
+                <li>Elements still in play are blue; the pair under comparison turns red and confirmed elements turn green.</li>
+                <li>The sorted suffix grows by one element after every full pass.</li>
+              </ul>
+            </div>
+            <div data-algo-panel="quick" hidden>
+              <p class="explanation__paragraph">Quick sort selects a pivot element and partitions the array into two sub-arrays: elements less than the pivot and elements greater than the pivot. The process is recursively applied to the sub-arrays.</p>
+              <ul class="explanation__list">
+                <li>The pivot turns yellow while the partition is being built, and each side is then sorted recursively.</li>
+                <li>Positions turn green once they have reached their final sorted place.</li>
+              </ul>
+            </div>
+            <div data-algo-panel="merge" hidden>
+              <p class="explanation__paragraph">Merge sort divides the array into halves until each sub-array has one element, then merges them back together in sorted order. This is a classic divide-and-conquer algorithm.</p>
+              <ul class="explanation__list">
+                <li>The runs currently being merged are purple and the elements being compared turn red.</li>
+                <li>Each level of the recursion doubles the length of the sorted runs.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>Algorithm Visualization Tool • Use the controls to visualize sorting algorithms step by step</p>
+      <p>Click on algorithm buttons to switch between Bubble Sort, Quick Sort, and Merge Sort</p>
+    </footer>
+  </div>
+</div>
+    <script type="application/json" id="av-config">{"site": {"title": "Algorithm Visualization - Sorting Algorithms", "heading": "Algorithm Visualization", "tagline": "Visualize sorting algorithms step by step", "footer": ["Algorithm Visualization Tool • Use the controls to visualize sorting algorithms step by step", "Click on algorithm buttons to switch between Bubble Sort, Quick Sort, and Merge Sort"], "legend": [{"key": "normal", "label": "Normal", "color": "#3b82f6"}, {"key": "comparing", "label": "Comparing", "color": "#ef4444"}, {"key": "sorted", "label": "Sorted", "color": "#22c55e"}, {"key": "pivot", "label": "Pivot", "color": "#eab308"}, {"key": "merging", "label": "Merging", "color": "#a855f7"}], "defaults": {"algorithm": "bubble", "array_size": 20, "speed": 500}, "array_size": {"min": 10, "max": 40, "step": 1}, "speed": {"min": 100, "max": 900, "step": 100}}, "algorithms": [{"key": "bubble", "name": "Bubble Sort", "button_label": "bubble Sort", "accent_hex": "#f97316"}, {"key": "quick", "name": "Quick Sort", "button_label": "quick Sort", "accent_hex": "#a855f7"}, {"key": "merge", "name": "Merge Sort", "button_label": "merge Sort", "accent_hex": "#22c55e"}]}</script>
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>

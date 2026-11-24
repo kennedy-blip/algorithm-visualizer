@@ -8,5 +8,8 @@
     "build": "bash scripts/build.sh dist",
     "test": "bash scripts/test.sh",
     "serve": "python3 -m http.server 8123 --directory dist"
+  },
+  "devDependencies": {
+    "vite": "file:tools/vite-render-shim"
   }
 }

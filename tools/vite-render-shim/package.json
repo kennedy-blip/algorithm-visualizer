@@ -1,0 +1,10 @@
+{
+  "name": "vite-render-shim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Compatibility shim for the Render build command 'npm ci && ./node_modules/.bin/vite build': renders the Python/Jinja2 static site into dist/.",
+  "license": "MIT",
+  "bin": {
+    "vite": "cli.js"
+  }
+}

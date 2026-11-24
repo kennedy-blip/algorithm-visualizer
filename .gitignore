@@ -6,8 +6,11 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
-# Static-site build output (Render rebuilds it from site/templates on deploy)
-dist/
+# dist/ is intentionally committed: Render's build image may not ship Python,
+# in which case the shim publishes this prebuilt output. It must stay byte-for-
+# byte identical to a fresh `bash scripts/build.sh` (enforced by
+# site/tests/test_render_compat.py).
 
 # Node test harness dependencies
 site/tests/js/node_modules/
+node_modules/
