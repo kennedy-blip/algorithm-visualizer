@@ -161,6 +161,28 @@ Safety properties relied on:
 5. Live verification of https://algorithm-visualizer-tzld.onrender.com after
    Render's auto-deploy.
 
+### Live verification (2026-11-24)
+
+After PR #2 was merged, Render's auto-deploy published the static site. Checked
+against https://algorithm-visualizer-tzld.onrender.com:
+
+| Check | Result |
+| --- | --- |
+| `/` (cache-busted) | New build: all three algorithm cards server-rendered, `One playback step = …` hints, legend shows **Normal, Comparing, Sorted, Pivot, Merging**, `Total Steps: 191` for the 20-bar run instead of the old fixed `40` |
+| `/robots.txt` | `User-agent: *` / `Allow: /` (only emitted by the new build) |
+| `/data/algorithms.json` | Served with the exported metadata (new path; 404 before the deploy) |
+| Title | Unchanged: `Algorithm Visualization - Sorting Algorithms` |
+| Downtime | None — the initial failed build kept the React deployment live until this deploy succeeded |
+
+Note: a non-cache-busted `/` request kept returning an old copy from an
+intermediate HTTP cache (it showed the same random array on repeated fetches,
+which a live React page cannot do). Cache-busted requests and the new asset
+paths all return the new build, so a hard refresh / incognito window is the
+right way to confirm locally.
+
+GitHub's language breakdown still reports the pre-cutover index (TypeScript);
+linguist statistics update asynchronously after the merge.
+
 ## 6. Evidence (final state)
 
 ```bash
