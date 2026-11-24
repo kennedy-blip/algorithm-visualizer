@@ -4,9 +4,9 @@
 Pipeline
 --------
 1. Read ``site/data/algorithms.json`` (exported from the legacy React app).
-2. Render ``site/templates/index.html`` into ``site/dist/index.html``.
-3. Copy ``site/static/**`` to ``site/dist/assets/**``.
-4. Publish the JSON data at ``site/dist/data/algorithms.json``.
+2. Render ``site/templates/index.html`` into ``<repo>/dist/index.html``.
+3. Copy ``site/static/**`` to ``<repo>/dist/assets/**``.
+4. Publish the JSON data at ``<repo>/dist/data/algorithms.json``.
 5. Verify the result: every local href/src resolves, the page has no unrendered
    template syntax, and the data file round-trips through json.load.
 
@@ -15,6 +15,9 @@ builds.  It has no network access and no dependency beyond Jinja2.
 
 Usage:
     python3 site/build.py [--out DIR] [--data FILE] [--check-only]
+
+``--out`` defaults to ``dist/`` at the repository root, which is the directory
+Render publishes for the static site.
 """
 
 from __future__ import annotations
@@ -33,7 +36,7 @@ SITE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = SITE_DIR / "templates"
 STATIC_DIR = SITE_DIR / "static"
 DATA_FILE = SITE_DIR / "data" / "algorithms.json"
-DEFAULT_OUT = SITE_DIR / "dist"
+DEFAULT_OUT = SITE_DIR.parent / "dist"
 
 # Inline SVG bodies for the icons used by the page (lucide geometry, 24x24).
 ICONS: dict[str, str] = {

@@ -1,7 +1,9 @@
 # Baseline: production app as found (2026-11-24)
 
-Everything here was observed **before** any change, and the legacy app has not
-been modified. This is the reference the new static site is checked against.
+Everything here was observed **before** any change. This is the reference the
+static site was checked against, and it is kept as a historical snapshot: the
+legacy React/Vite sources were removed at cutover (see `MIGRATION.md` §7), so a
+few of the paths below no longer exist in the working tree.
 
 ## Repository
 

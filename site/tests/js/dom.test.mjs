@@ -1,7 +1,7 @@
 /**
  * Browser-behaviour smoke tests for the generated site.
  *
- * The page is loaded from the real build output (site/dist/index.html) inside
+ * The page is loaded from the real build output (dist/index.html) inside
  * jsdom, and static/js/app.js is bundled with esbuild (jsdom does not execute
  * <script type="module">).  These tests catch wiring mistakes that the pure
  * engine tests cannot see: missing element ids, wrong slider bounds, broken
@@ -20,7 +20,7 @@ import * as esbuild from "esbuild";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const siteDir = path.resolve(here, "../..");
-const distIndex = path.join(siteDir, "dist", "index.html");
+const distIndex = path.join(siteDir, "..", "dist", "index.html");
 const appEntry = path.join(siteDir, "static", "js", "app.js");
 
 if (!existsSync(distIndex)) {

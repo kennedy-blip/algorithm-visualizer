@@ -12,13 +12,14 @@ The legacy app at the repository root is untouched. See
 ## Quick start
 
 ```bash
-python3 -m venv ../.venv
-../.venv/bin/pip install -r requirements-dev.txt
-npm --prefix tests/js install          # only needed for the DOM tests
+cd ..                                    # repository root
+python3 -m venv .venv && .venv/bin/pip install -r site/requirements-dev.txt
+npm --prefix site/tests/js install       # only needed for the DOM tests
 
-../.venv/bin/python build.py           # → dist/
-../.venv/bin/python -m pytest tests -q # 38 build + parity tests
-(cd tests/js && node --test)           # 22 engine + DOM tests
+bash scripts/build.sh dist               # → dist/
+.venv/bin/python site/build.py
+.venv/bin/python -m pytest site/tests -q
+(cd site/tests/js && node --test)
 python3 -m http.server 8123 --directory dist
 ```
 
@@ -29,8 +30,8 @@ python3 -m http.server 8123 --directory dist
 ```
 site/
 ├── build.py               Jinja2 build: render, copy assets, verify output
-├── data/algorithms.json   exported metadata (generated: see scripts/)
-├── scripts/export_data.py read-only export from the legacy src/App.tsx
+├── data/algorithms.json   algorithm metadata (generated: see scripts/)
+├── scripts/export_data.py exporter used against the legacy React source
 ├── templates/
 │   ├── base.html          document shell, config JSON, module script
 │   ├── index.html         full page: cards, chart, controls, explanation
@@ -48,11 +49,11 @@ site/
 ## How data flows
 
 ```
-src/App.tsx (legacy, read-only)
+src/App.tsx (removed at cutover; exporter kept for provenance)
       │  scripts/export_data.py  (verbatim copy + curated extras)
       ▼
-data/algorithms.json ──► build.py ──► dist/index.html  (server-rendered)
-      └──────────────────────────────► dist/data/algorithms.json
+data/algorithms.json ──► build.py ──► <repo>/dist/index.html  (server-rendered)
+      └──────────────────────────────► <repo>/dist/data/algorithms.json
                                           ▲
                           static/js/app.js fetches config from the page and
                           builds frames with static/js/algorithms.js
@@ -71,7 +72,7 @@ Render **static site**:
   (the local venv keeps the build independent of the system Python's
   PEP 668 `externally-managed-environment` policy — plain `pip install` fails
   on Debian-based images without `--break-system-packages`)
-* Publish directory: `site/dist`
+* Publish directory: `dist`
 * Root directory: `.`
 * `PYTHON_VERSION=3.11.2`
 

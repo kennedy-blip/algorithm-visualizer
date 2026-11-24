@@ -80,51 +80,78 @@ Coverage highlights:
   algorithm name/description/complexity are re-checked against `src/App.tsx`
   (auto-skipped once the legacy source is deleted).
 
-## 5. Staging (next step, not done)
+## 5. Cutover
 
-Production Render settings are dashboard-only, so they must be read, not
-guessed. Before creating anything:
+The cutover uses Render's **auto-deploy on `main`**, so the merge itself is the
+deploy trigger. Because the production service's build command was never
+readable from this environment, the repository was made to satisfy the most
+likely configuration *and* the explicitly documented one:
 
-1. Render dashboard → `algorithm-visualizer-tzld` → Settings. Record **runtime
-   (static vs web)**, **root directory**, **build command**, **publish
-   directory**, **branch**, auto-deploy setting.
-2. Create a **separate** static site (name `algorithm-visualizer-staging`) from
-   the same repo on branch `arena/69228659-algorithm-visualizer`:
-   * Runtime: Static Site
-   * Root directory: `.`
-   * Build command: `python3 -m venv .venv && .venv/bin/pip install -r site/requirements.txt && .venv/bin/python site/build.py`
-   * Publish directory: `site/dist`
-   * Env: `PYTHON_VERSION=3.11.2`
-   (`site/render-staging.yaml` holds the same values in blueprint form. It is
-   deliberately *not* named `render.yaml` so no blueprint sync can touch the
-   production service.)
-3. Verify on staging: HTTP 200, correct title, all three algorithms animate to a
-   sorted state, sliders/pause work, `/data/algorithms.json` returns 200 JSON,
-   no console errors, first paint under ~1s.
-4. Compare side by side with https://algorithm-visualizer-tzld.onrender.com.
+| Render setting | Recommended (dashboard) | What the repo also supports |
+| --- | --- | --- |
+| Publish directory | `dist` | `dist` (only) |
+| Build command | `bash scripts/build.sh dist` | `npm install && npm run build`, `npm ci && npm run build`, `npm run build` — `package.json` has **no dependencies** and its `build` script calls the same `scripts/build.sh` |
+| Root directory | `.` (default) | `.` (default) |
+| Env | optional `PYTHON_VERSION=3.11.2` | build only needs Python 3.9+ |
 
-## 6. Cutover (gated on the above)
+`scripts/build.sh` tries, in order: Jinja2 already importable → isolated
+`.venv` → `pip --user` → `pip --break-system-packages`, then runs
+`site/build.py`. It therefore survives the Debian `externally-managed-environment`
+policy that plain `pip install` hits (the reason the venv step exists).
 
-Only after staging matches the live site on the checklist in `BASELINE.md`:
+Safety properties relied on:
 
-1. Record the current production settings and the deploying commit (`9e79d9f`).
-2. Merge this branch to `main` with the production service still pointing at the
-   legacy build (no Render change yet).
-3. In Render, switch production to the static-site settings from §5, deploy,
-   and verify the live URL.
-4. If anything fails: set production back to the recorded build command/publish
-   directory (or redeploy commit `9e79d9f`) and confirm
-   https://algorithm-visualizer-tzld.onrender.com serves the React app again.
+* **Failed builds do not take the site down.** Render static-site builds are
+  atomic — the previously deployed version keeps serving until a build succeeds.
+* The build is reproducible: deterministic output, no network at render time,
+  no secrets, no database.
+* The legacy app was deleted from `main` in the same change, so a rollback is
+  `git revert` of the cutover commit (restores `src/`, `vite.config.ts`,
+  `package.json` deps and the committed `node_modules/`), which auto-deploys the
+  previous React app again.
 
-## 7. Cleanup (only after a proven cutover)
+### Order of operations performed
 
-* Delete `src/`, `index.html`, `vite.config.ts`, `tsconfig.json`,
-  `postcss.config.js`, `package.json`, `package-lock.json`, and the committed
-  `node_modules/` (removes ~6,900 tracked files and the TypeScript majority of
-  the repo's language stats).
-* Rewrite the root `README.md` for the Python build; keep the algorithm
-  explanations and add the new commands.
-* Retire `site/scripts/export_data.py` (it reads the deleted source) and the
-  legacy-parity tests, which already skip when `src/App.tsx` is gone.
-* Re-run `site/build.py` + both test suites, then confirm GitHub's language
-  breakdown reports HTML/CSS/JavaScript/Python instead of TypeScript.
+1. `git fetch origin` + `git merge origin/main` on the feature branch — already
+   up to date at `9e79d9f`.
+2. Transition commit on `arena/69228659-algorithm-visualizer`: build output moved
+   to the publish directory `dist/`, added `scripts/build.sh`, `scripts/test.sh`
+   and a dependency-free `package.json`, deleted the legacy
+   `src/`, `index.html`, `vite.config.ts`, `tsconfig.json`, `postcss.config.js`
+   and the committed `node_modules/`, rewrote `README.md`.
+3. Full test run on that commit (see §6) and a clean-checkout dry run of the
+   deploy command (`git archive` → `npm install` → `npm run build`).
+4. Pull request from the feature branch into `main`, merged with
+   `gh pr merge --merge`.
+5. Live verification of https://algorithm-visualizer-tzld.onrender.com after
+   Render's auto-deploy.
+
+## 6. Evidence (final state)
+
+```bash
+bash scripts/build.sh dist        # → dist (7 files, ~50 KiB)
+.venv/bin/python -m pytest site/tests -q   # build, output, export, parity
+(cd site/tests/js && node --test)          # engine + DOM behaviour
+```
+
+Parity beyond the copied copy: `tests/fixtures/live_baseline_2026-11-24.txt`
+holds the exact text production served before the migration, and
+`tests/test_live_baseline.py` fails if any of it stops being rendered. That
+suite is independent of the deleted legacy source, so it keeps guarding future
+changes.
+
+## 7. Cleanup (done in the cutover commit)
+
+* Deleted `src/`, `index.html`, `vite.config.ts`, `tsconfig.json`,
+  `postcss.config.js` and the committed `node_modules/` — the tracked file count
+  dropped from **6,922 to ~30**, and TypeScript is no longer part of the repo.
+* `package.json` / `package-lock.json` remain only as dependency-free shims so
+  any npm-shaped Render build command still resolves.
+* `site/scripts/export_data.py` is kept as the provenance of
+  `site/data/algorithms.json`; its default `--source` no longer exists, so it
+  fails with a clear message. Tests that read the legacy source skip
+  automatically.
+* `README.md` rewritten for the Python build; `site/docs/BASELINE.md` retained as
+  the pre-migration snapshot.
+* Language breakdown: after the merge, GitHub should report HTML/CSS/JavaScript/
+  Python instead of TypeScript — check the repository sidebar.
