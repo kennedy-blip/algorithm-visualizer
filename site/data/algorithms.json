@@ -1,0 +1,113 @@
+{
+  "source": "src/App.tsx",
+  "site": {
+    "title": "Algorithm Visualization - Sorting Algorithms",
+    "heading": "Algorithm Visualization",
+    "tagline": "Visualize sorting algorithms step by step",
+    "footer": [
+      "Algorithm Visualization Tool • Use the controls to visualize sorting algorithms step by step",
+      "Click on algorithm buttons to switch between Bubble Sort, Quick Sort, and Merge Sort"
+    ],
+    "legend": [
+      {
+        "key": "normal",
+        "label": "Normal",
+        "color": "#3b82f6"
+      },
+      {
+        "key": "comparing",
+        "label": "Comparing",
+        "color": "#ef4444"
+      },
+      {
+        "key": "sorted",
+        "label": "Sorted",
+        "color": "#22c55e"
+      },
+      {
+        "key": "pivot",
+        "label": "Pivot",
+        "color": "#eab308"
+      },
+      {
+        "key": "merging",
+        "label": "Merging",
+        "color": "#a855f7"
+      }
+    ],
+    "defaults": {
+      "algorithm": "bubble",
+      "array_size": 20,
+      "speed": 500
+    },
+    "array_size": {
+      "min": 10,
+      "max": 40,
+      "step": 1
+    },
+    "speed": {
+      "min": 100,
+      "max": 900,
+      "step": 100
+    }
+  },
+  "algorithms": [
+    {
+      "name": "Bubble Sort",
+      "description": "Repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.",
+      "complexity": "O(n²)",
+      "color": "bg-orange-500",
+      "icon": "Zap",
+      "key": "bubble",
+      "accent": "orange",
+      "accent_hex": "#f97316",
+      "complexity_class": "quadratic",
+      "button_label": "bubble Sort",
+      "summary": "Repeatedly swap adjacent out-of-order elements until the list is sorted.",
+      "explanation": "Bubble sort works by repeatedly swapping adjacent elements if they are in the wrong order. Each pass through the list places the next largest element in its correct position.",
+      "notes": [
+        "Elements still in play are blue; the pair under comparison turns red and confirmed elements turn green.",
+        "The sorted suffix grows by one element after every full pass."
+      ],
+      "steps_hint": "One playback step = one adjacent comparison."
+    },
+    {
+      "name": "Quick Sort",
+      "description": "Divide and conquer algorithm that picks an element as pivot and partitions the array around the pivot.",
+      "complexity": "O(n log n) average",
+      "color": "bg-purple-500",
+      "icon": "GitBranch",
+      "key": "quick",
+      "accent": "purple",
+      "accent_hex": "#a855f7",
+      "complexity_class": "linearithmic",
+      "button_label": "quick Sort",
+      "summary": "Pick a pivot, partition around it, then sort each side recursively.",
+      "explanation": "Quick sort selects a pivot element and partitions the array into two sub-arrays: elements less than the pivot and elements greater than the pivot. The process is recursively applied to the sub-arrays.",
+      "notes": [
+        "The pivot turns yellow while the partition is being built, and each side is then sorted recursively.",
+        "Positions turn green once they have reached their final sorted place."
+      ],
+      "steps_hint": "One playback step = one partition comparison or pivot placement."
+    },
+    {
+      "name": "Merge Sort",
+      "description": "Divide and conquer algorithm that divides the array into halves, sorts them, and merges them back.",
+      "complexity": "O(n log n)",
+      "color": "bg-green-500",
+      "icon": "GitMerge",
+      "key": "merge",
+      "accent": "green",
+      "accent_hex": "#22c55e",
+      "complexity_class": "linearithmic",
+      "button_label": "merge Sort",
+      "summary": "Split the array into halves, sort each half, then merge them back in order.",
+      "explanation": "Merge sort divides the array into halves until each sub-array has one element, then merges them back together in sorted order. This is a classic divide-and-conquer algorithm.",
+      "notes": [
+        "The runs currently being merged are purple and the elements being compared turn red.",
+        "Each level of the recursion doubles the length of the sorted runs."
+      ],
+      "steps_hint": "One playback step = one merge of a pair of runs."
+    }
+  ]
+}

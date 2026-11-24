@@ -1,0 +1,37 @@
+# Phrases captured from the production deployment on 2026-11-24
+# https://algorithm-visualizer-tzld.onrender.com (HTTP 200, title below).
+# Only stable, non-randomised text is listed; array values and step totals are
+# generated at runtime and are compared structurally instead.
+TITLE: Algorithm Visualization - Sorting Algorithms
+Algorithm Visualization
+Visualize sorting algorithms step by step
+Algorithm Selection
+bubble Sort
+quick Sort
+merge Sort
+Comparisons:
+Swaps:
+Time Complexity: O(n²)
+Repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.
+Time Complexity: O(n log n) average
+Divide and conquer algorithm that picks an element as pivot and partitions the array around the pivot.
+Time Complexity: O(n log n)
+Divide and conquer algorithm that divides the array into halves, sorts them, and merges them back.
+Array Controls
+Array Size: 20
+Speed: 500ms
+Slow
+Medium
+Fast
+Generate New Array
+Visualization
+Normal
+Comparing
+Sorted
+Step: 0
+Total Steps:
+Step-by-Step Explanation
+Step 0: Initial array generated. Ready to start sorting.
+Bubble sort works by repeatedly swapping adjacent elements if they are in the wrong order.
+Algorithm Visualization Tool • Use the controls to visualize sorting algorithms step by step
+Click on algorithm buttons to switch between Bubble Sort, Quick Sort, and Merge Sort

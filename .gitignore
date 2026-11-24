@@ -1,0 +1,13 @@
+# Local virtualenv used by the build script
+.venv/
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Static-site build output (Render rebuilds it from site/templates on deploy)
+dist/
+
+# Node test harness dependencies
+site/tests/js/node_modules/

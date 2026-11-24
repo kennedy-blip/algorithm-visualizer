@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="{{ site.tagline }}. Compare, pause, step through and replay Bubble, Quick and Merge sort." />
+    <meta name="theme-color" content="#0b1120" />
+    <title>{% block title %}{{ site.title }}{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#visualization">Skip to visualization</a>
+    {% block content %}{% endblock %}
+    <script type="application/json" id="av-config">{{ config_json | safe }}</script>
+    <script type="module" src="assets/js/app.js"></script>
+  </body>
+</html>
