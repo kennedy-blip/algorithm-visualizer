@@ -1,0 +1,11 @@
+# Local virtualenv for the Python static-site build
+.venv/
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Build output and test dependencies of the new static site
+site/dist/
+site/tests/js/node_modules/

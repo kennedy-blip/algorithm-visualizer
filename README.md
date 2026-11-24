@@ -47,6 +47,20 @@ An interactive web application for visualizing sorting algorithms with step-by-s
 - Real-time algorithm state tracking
 - Smooth animations and transitions
 
+## Static-site migration (in progress)
+
+A Python 3.11 + Jinja2 rebuild of this app lives in [`site/`](site/README.md). It
+renders the same visualization, controls and copy as a pre-rendered static site
+with no React or bundler. The React app documented above is still what production
+serves on Render, and it remains the canonical source until the staging checks in
+[`site/docs/MIGRATION.md`](site/docs/MIGRATION.md) pass.
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r site/requirements-dev.txt
+.venv/bin/python site/build.py          # → site/dist
+.venv/bin/python -m pytest site/tests -q
+```
+
 ## Development
 
 To run the project locally:

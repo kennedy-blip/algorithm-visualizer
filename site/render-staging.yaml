@@ -1,0 +1,28 @@
+# Staging service definition for the Python/Jinja2 static site.
+#
+# This file is intentionally NOT named render.yaml at the repository root: the
+# existing production Render service was created from the dashboard, has no
+# blueprint in this repo, and must keep building the legacy React app until the
+# cutover is signed off.  Use these values to create a *separate* staging
+# service (Render dashboard: New -> Static Site, or a blueprint pointed at this
+# file) so both apps can run side by side.
+services:
+  - type: web
+    name: algorithm-visualizer-staging
+    runtime: static
+    rootDir: .
+    buildCommand: pip install -r site/requirements.txt && python3 site/build.py
+    staticPublishPath: site/dist
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.2
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=3600
+      - path: /data/*
+        name: Cache-Control
+        value: public, max-age=600
+      - path: /index.html
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate

@@ -1,0 +1,2 @@
+# Runtime requirements for the static site generator (Python 3.11+).
+Jinja2==3.1.6

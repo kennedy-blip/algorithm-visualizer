@@ -1,0 +1,10 @@
+# Generated build output - Render rebuilds it from templates on every deploy.
+dist/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node test harness
+tests/js/node_modules/
