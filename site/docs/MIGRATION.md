@@ -83,16 +83,51 @@ Coverage highlights:
 ## 5. Cutover
 
 The cutover uses Render's **auto-deploy on `main`**, so the merge itself is the
-deploy trigger. Because the production service's build command was never
-readable from this environment, the repository was made to satisfy the most
-likely configuration *and* the explicitly documented one:
+deploy trigger. The production service's build settings are dashboard-only, so
+the first attempt relied on inference — and the first auto-deploy failed. Its
+log supplied the missing fact: the service builds with
 
-| Render setting | Recommended (dashboard) | What the repo also supports |
+```
+npm ci && ./node_modules/.bin/vite build
+```
+
+That command calls the **Vite binary by path**, so no `npm run build` shim can
+intercept it — and the binary disappeared with the legacy app:
+
+```
+bash: line 1: ./node_modules/.bin/vite: No such file or directory
+==> Build failed
+```
+
+Because static-site deploys are atomic, the previous React deployment kept
+serving; the site never went down.
+
+The repository now satisfies that exact command, so no dashboard change is
+needed:
+
+| Render setting | Current value | Recommended (dashboard) |
 | --- | --- | --- |
-| Publish directory | `dist` | `dist` (only) |
-| Build command | `bash scripts/build.sh dist` | `npm install && npm run build`, `npm ci && npm run build`, `npm run build` — `package.json` has **no dependencies** and its `build` script calls the same `scripts/build.sh` |
-| Root directory | `.` (default) | `.` (default) |
-| Env | optional `PYTHON_VERSION=3.11.2` | build only needs Python 3.9+ |
+| Publish directory | `dist` | `dist` |
+| Build command | `npm ci && ./node_modules/.bin/vite build` | `bash scripts/build.sh dist` |
+| Root directory | `.` | `.` |
+| Env / Node | Node 22.22.0 | optional `PYTHON_VERSION=3.11.2` |
+
+How the current command is satisfied:
+
+* `package.json` depends on `vite` via `file:tools/vite-render-shim`; `npm ci`
+  installs it and creates `node_modules/.bin/vite`.
+* That bin renders the site through `scripts/build.sh dist` — identical output
+  to the recommended build command.
+* `scripts/build.sh` exits **3** when no Python interpreter exists; only in that
+  case does the shim publish the committed `dist/` (with a warning) instead of
+  failing the build. Real build errors still fail the deploy.
+* `site/tests/test_render_compat.py` pins this contract: shim wiring, lockfile
+  link, the exit-3 guard, the fallback, and byte-for-byte freshness of the
+  committed `dist/`.
+
+Deleting the shim later is a two-step cleanup: set the build command to
+`bash scripts/build.sh dist`, drop the `vite` devDependency and committed
+`dist/`, then remove `tools/vite-render-shim`.
 
 `scripts/build.sh` tries, in order: Jinja2 already importable → isolated
 `.venv` → `pip --user` → `pip --break-system-packages`, then runs

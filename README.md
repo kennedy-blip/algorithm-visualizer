@@ -82,16 +82,24 @@ npm --prefix site/tests/js install                # jsdom + esbuild, once
 
 ## Deployment (Render)
 
-Static site, publish directory **`dist`**.
+Static site, publish directory **`dist`**, build command
+**`bash scripts/build.sh dist`**.
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -r site/requirements.txt && .venv/bin/python site/build.py --out dist
+bash scripts/build.sh dist      # installs Jinja2 if needed, renders dist/
 ```
 
-or simply `bash scripts/build.sh dist` (used by `npm run build`, so an existing
-`npm install && npm run build` build command keeps working). Python 3.9+ is
-required. See `site/docs/MIGRATION.md` for the full deploy history and the
-rollback steps.
+The Render service still uses the build command written for the old Vite app,
+`npm ci && ./node_modules/.bin/vite build`. That is satisfied by
+`tools/vite-render-shim`, a `file:` dev dependency that provides a `vite` bin
+which renders this site instead. `dist/` is committed as well, so if the build
+image has no Python the shim publishes that prebuilt output (with a warning)
+rather than failing the deploy; `site/tests/test_render_compat.py` fails if the
+committed `dist/` ever drifts from a fresh build.
+
+Once the build command is switched to `bash scripts/build.sh dist`, the shim and
+the committed `dist/` can both be deleted. Python 3.9+ is required. See
+`site/docs/MIGRATION.md` for the deploy history and rollback steps.
 
 ## Algorithms at a glance
 

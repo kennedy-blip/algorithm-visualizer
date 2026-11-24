@@ -14,6 +14,14 @@ OUT="${1:-dist}"
 PYTHON_BIN="${PYTHON:-python3}"
 REQ="site/requirements.txt"
 
+if ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
+  echo "!! no '$PYTHON_BIN' on PATH; cannot render the site" >&2
+  # Exit code 3 is reserved for a missing interpreter: tools/vite-render-shim
+  # falls back to the committed dist/ only for this case, never for real
+  # build errors.
+  exit 3
+fi
+
 echo "==> building static site into '${OUT}' with $("$PYTHON_BIN" --version 2>&1)"
 
 if "$PYTHON_BIN" -c "import jinja2" >/dev/null 2>&1; then
